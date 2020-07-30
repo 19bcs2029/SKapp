@@ -1,0 +1,54 @@
+<div class="row mt-5">
+    <div class="col-sm-4 offset-sm-4">
+        <div class="card" >
+            <div class="card-body">
+                <form [formGroup]="myForm" (ngSubmit)="addProduct(myForm)">
+                    <div class="text-center">
+                        <img [src]="imgSrc" accept="image/*" width="100%" height="100%" (click)="fileUploader.click()">
+                    </div>
+                    <div class="form-group">
+                        <label>Select featured image to upload</label>
+                        <input type="file" class="form-control-file" #fileUploader [formControl]="myForm.controls['imageUrl']"
+                            (change)="showPreview($event)">
+                            <div class="text-danger" *ngIf="!isSubmitted && myForm.controls['imageUrl'].errors?.required && myForm.controls['imageUrl'].touched">Image
+                                is required.</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="text" class="form-control" [formControl]="myForm.controls['productName']"
+                            placeholder="Product Name">
+                        <div class="text-danger" *ngIf="!isSubmitted && myForm.controls['productName'].errors?.required && myForm.controls['productName'].touched">This field
+                            is required.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" [formControl]="myForm.controls['material']"
+                            placeholder="Material">
+                        <div class="text-danger" *ngIf="!isSubmitted && myForm.controls['material'].errors?.required && myForm.controls['material'].touched">This field 
+                            is required.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" [formControl]="myForm.controls['size']" placeholder="Size in inches">
+                        <div class="text-danger" *ngIf="!isSubmitted && myForm.controls['size'].errors?.required && myForm.controls['size'].touched">This field
+                            is required.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" [formControl]="myForm.controls['price']" placeholder="Price">
+                        <div class="text-danger" *ngIf="!isSubmitted && myForm.controls['price'].errors?.required && myForm.controls['price'].touched">This field
+                            is required.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success btn-block float-right" [disabled]="!myForm.valid">Submit</button>
+                    </div>
+                    
+                    
+                </form>
+                
+            </div>
+            <div class="alert alert-{{colour}}" *ngIf="message.length > 0">{{message}}</div>
+        </div>
+    </div>
+</div>

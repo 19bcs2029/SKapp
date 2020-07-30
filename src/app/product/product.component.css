@@ -1,0 +1,16 @@
+p{
+    margin: 0;
+    padding: 0;
+}
+
+h5{
+    margin: 0;
+    padding: 0;
+}
+.card-img-top, h5 {
+    cursor: pointer;
+}
+
+.modal-dialog{
+    width:500x;
+}

@@ -1,0 +1,33 @@
+<div class="container d-flex justify-content-center">
+    <h1 class="my-4">Give your valuable feedback/queries to us</h1>
+</div>
+
+<div class="container">
+<form [formGroup]="query" (ngSubmit)="send(query)">
+    <div class="form-group">
+        <label for="Name">Full Name</label>
+        <input type="text" class="form-control" id="name" [formControl]="query.controls['name']">
+    </div>
+    <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="email" class="form-control" id="Email1" aria-describedby="emailHelp" [formControl]="query.controls['email']">
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <div class="form-group">
+        <label for="feedback">Feedback / Queries</label>
+        <textarea type="text" class="form-control" id="text" [formControl]="query.controls['feedback']"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary" *ngIf="!loggedIn" disabled>Submit</button>
+    <div class="alert alert-warning mt-3" *ngIf="!loggedIn">Please login to send feedback.</div>
+    <button type="submit" class="btn btn-primary" (click)="send(query)" *ngIf="loggedIn">Submit</button>
+</form>
+<div class="alert alert-{{ colour }} mt-3">{{ message }}</div>
+<div class="container float-left mx-5 py-lg-5">
+    <p class="text-info"><span class="fa fa-2x fa-envelope-open mr-2"></span> sujeetbnr@gmail.com</p>
+    <p class="text-info"><span class="fa fa-3x fa-mobile-phone mr-3"></span> 99344219911</p>
+    <p class="text-info"><span class="fa fa-2x fa-phone mr-2"></span> 0631-2950203</p>
+</div>
+
+</div>
+

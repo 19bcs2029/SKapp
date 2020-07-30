@@ -1,0 +1,66 @@
+<div class="row">
+    <div class="col-sm-10 offset-sm-1">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <h2>New Orders</h2>
+                    </div>
+                    <div class="col-sm-3">
+                        <a class="float-right" routerLink="/processedOrders" class="btn-link">Go to Processed Orders</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body mt-3">
+                
+
+                <div class="card mt-3" *ngFor="let i of items, let k = index">
+                    <div class="row mt-2">
+                        <div class="col-sm-5 ml-3">
+                            <h5>Order Id: {{orderList[k].id}}</h5>
+                            <h6>Dated: {{dates[k].toDate() | date: 'medium'}}</h6>
+                            <h6>Customer Name: {{names[k]}}</h6>
+                            <h6>Contact Number: {{mobiles[k]}}</h6>
+                            <h6>Email: {{emails[k]}}</h6>
+                        </div>
+                        <div class="col-sm-4 ml-3 float-right">
+                            <h6>Net Quantity: {{quantities[k]}}</h6>
+                            <h6>Net Amount: {{netAmounts[k] | currency: 'INR'}}</h6>
+                            <h6>Customer Id: {{customerIds[k]}}</h6>
+                            <h6>Shipping Address: {{addresses[k]}}</h6>
+                        </div>
+                        <div class="col mt-5">
+                            <button class="btn btn-success" (click)="markProcessed(orderList[k].id)">Mark as Processed</button>
+                        </div>
+                        
+                    </div>
+                
+                        <div *ngFor="let j of i">
+                            <div class="card mt-3">
+                                <div class="row">
+                
+                                    <div class="col-sm-3 mt-3 mb-3 ml-3">
+                                        <img src="{{j.imageUrl}}" width="150px" height="100px">
+                                    </div>
+                                    <div class="col-sm-4 ml-3">
+                                        <h3>{{j.productName}}</h3>
+                                        <h5>Material: {{j.material}}</h5>
+                                        <h5>Size: {{j.size}} (in inches)</h5>
+                                        <h5>Price: {{j.price | currency: 'INR'}}</h5>
+                                    </div>
+                                    <div class="col-sm-4 mt-3 ml-3">
+                                        <h5>Ordered Quantity: {{j.quantity}}</h5>
+                                        <h5>Cumulative Price: {{j.cumulativePrice | currency: 'INR'}}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+

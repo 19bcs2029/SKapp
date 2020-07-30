@@ -1,0 +1,37 @@
+<div class="col-10 offset-1 mb-5 card" style="width: 20rem;">
+    <img src="{{ productData.imageUrl }}" class="card-img-top mt-3" (click)="show()">
+    <div class="card-body text-center">
+        <h5 class="card-title" routerLink="/products/{{ product.id }}">{{ productData.productName }}</h5>
+        <p class="card-text"><span>Material: </span>{{ productData.material }}</p>
+        <p class="card-text"><span>Size in inches: </span>{{ productData.size }}</p>
+        <p class="card-text"><span>Price: </span>{{ productData.price | currency: 'INR' }}</p>
+    </div>
+
+
+    <div [style.display]="showModal ? 'block' : 'none'" class="modal" id="imagemodal" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Image preview</h4>
+                <div type="button" class="btn btn-default fa fa-5x fa-times" data-dismiss="modal" (click)="hide()">
+                </div>
+            </div>
+            <div class="modal-body">
+                <img src="{{ productData.imageUrl }}" id="imagepreview" style="width: 1200px;">
+            </div>
+        </div>
+    </div>
+
+
+
+    <div>
+        Qty: <span><input type="number" class="form-control-sm" name="quantity" [(ngModel)]="quantity"></span>
+
+    </div>
+    <div class="text-center">
+        <a class="btn btn-outline-danger mt-3 mb-2" (click)="addToCart(productData)">Add to Cart</a>
+        <div class="alert alert-success" *ngIf="buttonClicked">Product added to cart</div>
+    </div>
+    
+
+</div>
