@@ -9,16 +9,9 @@ var server = http.createServer(app);
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-// app.use(express.static(__dirname + '/dist/SKapp'));
-
+app.use(express.json({limit: '1mb'}));
 require('./routes/paytm')(app);
 
-// app.get('/*', (req, res) => res.sendFile(path.join(__dirname)));
-// app.get('/*', (req, res) => res.sendFile(path.join(__dirname + '/products.component.html')));
-
-// app.post('/', (req,res) => {
-//     res.send("Hello World");
-// })
 
 const root = path.join(__dirname, 'dist', 'SKapp');
 

@@ -35,9 +35,10 @@ const routes: Routes = [{
   path: 'sellproduct', component: SellproductComponent, canActivate: [AuthGuard]
 }, {
   path: 'cart', component : CartComponent, canActivate: [AuthGuard]
-}, {
-  path: 'payment', component: PaymentComponent
-}, {
+}, 
+
+// {path: 'payment', component: PaymentComponent},
+   {
   path: 'orderRequests', component: OrderRequestsComponent, canActivate: [AuthGuard]
 }, {
   path: 'processedOrders', component: ProcessedOrdersComponent, canActivate: [AuthGuard]

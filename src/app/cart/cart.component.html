@@ -111,14 +111,37 @@
 
             <div class="card card-body">
                 <div class="pl-4">
-                    <h4 class="mt-5">Total Quantity: {{ totalQty }} </h4>
+                    <h4 class="mt-1">Total Quantity: {{ totalQty }} </h4>
                     <h4>Total Amount: {{ totalPrice | currency: 'INR'}}</h4>
                 </div>
-                <a href="/payment"><button class="btn btn-warning mt-5 justify-content-center" 
-                     method="get" [disabled]="(!Name) && (!address) && (!mobile)" (click)='getPaytm()'>Place Order
-                    </button></a>
 
-                <a href="/payment" class="btn btn-block btn-dark my-2">Open Paytm</a>
+                <hr>
+                <h3>Mode of Payment</h3>
+                
+                <div class="form-group mt-3">
+                    <div class="form-control">
+                        <h5 class="radio">
+                            <input type="radio" name="payment-mode" value="COD" [(ngModel)]="payment">
+                            Cash on Delivery 
+                        </h5>
+                        <h5 class="radio">
+                            <input type="radio" name="payment-mode" value="onlinePayment" [(ngModel)]="payment">
+                            Online Payment
+                        </h5>
+                    </div>
+                </div>
+
+                <hr>
+                    <button type="submit" class="btn btn-warning mt-5 justify-content-center"
+                        [disabled]="(!Name) || (!address) || (!mobile) || (!payment)"  (click)='placeOrder()'
+                        value="Place Order">Place Order
+                    </button>
+                    <i class="fa fa-money-bill-wave-alt"></i>
+
+
+
+                <!-- </input> -->
+                <!-- <a  class="btn btn-block btn-dark my-2">Open Paytm</a> -->
             </div>
         </div>
 

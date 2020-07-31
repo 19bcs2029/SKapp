@@ -8,12 +8,14 @@ import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorHandler, HandleError } from '../services/http-error-handler.service';
 import { environment } from '../../environments/environment';
-
+import { Observable } from 'rxjs';
+import { stringify } from 'querystring';
+import { response } from 'express';
 
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
-  styleUrls: ['./cart.component.css']
+  styleUrls: ['./cart.component.css'],
 })
 
 export class CartComponent implements OnInit {
@@ -33,33 +35,20 @@ export class CartComponent implements OnInit {
   items;
   user: any;
   email: string;
-
-  paymentUrl: string = `http://localhost:3000/payment`;
-  
-  private apiUrl = `${environment.apiUrl}/payment`;
-  private handleError: HandleError;
-  
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  };
-
+  payment: string;
   userId = firebase.auth().currentUser.uid;
+  
 
   constructor(private cartService: CartService,
               public router: Router,
               private http: HttpClient,
               private httpErrorHandler: HttpErrorHandler) {
 
-    // this.user = firebase.auth().currentUser;
-    this.handleError = this.httpErrorHandler.createHandleError('CartComponent')
-    this.getCartItems();
-
   }
 
   ngOnInit(): void {
     this.items = this.cartService.getItems();
+    this.getCartItems();
   }
 
   getCartItems(){
@@ -78,6 +67,7 @@ export class CartComponent implements OnInit {
     }).catch((error) => {
       this.message = 'Error while loading! Please check your network connection.';
     });
+
   }
 
   // remove(index){
@@ -91,8 +81,7 @@ export class CartComponent implements OnInit {
 
   emptyCart(){
     this.cartService.clearCart();
-    const userId = firebase.auth().currentUser.uid;
-    firebase.firestore().collection('users').doc(userId).update({
+    firebase.firestore().collection('users').doc(this.userId).update({
       cartItems: firebase.firestore.FieldValue.delete()
     }).then(() => {
       // this.router.navigate(['/products']);
@@ -102,35 +91,77 @@ export class CartComponent implements OnInit {
   toProducts(){
     this.router.navigate(['/products']);
   }
-
-
-  dataSet: any = [{
-    "totalPrice" : this.totalPrice,
-    "orderID" : this.orderID,
-    "customerId" : firebase.auth().currentUser.uid,
-    "mobile" : this.mobile,
-    "email" : this.email
-  }];
-
-  sendData(dataSet: any){
-    return this.http.post(this.paymentUrl,dataSet).toPromise().then((data) => {
-      console.log(data);
-    });
+  
     
+
+
+
+   async getPaytm(orderID,customerId,totalPrice,e_mail,mobile){
+
+    var dataSet : any = {
+      txnamount : totalPrice,
+      odId : orderID,
+      cstId : customerId,
+      mob : mobile,
+      email : e_mail
+    };
+  
+   var options = {
+      method: 'POST',
+      headers: {'Content-Type' : 'application/json'},
+      body: JSON.stringify(dataSet)
+    };
+
+    const response = await fetch('/payment', options);
+    const json = await response.json();
+    console.log(json);
+    
+    window.location.href = '/paytm';
+
   }
 
-  getPaytm(){
-    return this.http.post(`http://localhost:3000/payment`,this.dataSet);
-    
-  
-  };
+  getStatus(orderID){
+    var options = {
+      method: 'POST',
+      headers: {'Content-Type' : 'application/json'},
+      body: JSON.stringify({odId : orderID})
+    };
+
+    fetch('/paytm-success').then((response) => {
+      console.log(response);
+    })
+  }
+
+
+  storeShippingDetails(){
+
+    let shippingDetails = {
+      name : this.Name,
+      shippingAddress: this.address,
+      mobile: this.mobile
+    }
+    firebase.firestore().collection('users').doc(this.userId).set({
+      shippingDetails : shippingDetails
+    })
+
+  }
 
   placeOrder() {
 
     firebase.firestore().collection('users').doc(this.userId).get().then((querySnapshot) => {
-      this.email = querySnapshot.data().email;
+     this.email = querySnapshot.data().email;
+     var orderID : string= 'OD' + (Math.floor(Math.random()*10000000000000000));
+     
 
-      firebase.firestore().collection('orders').add({
+     if(this.payment == 'onlinePayment'){
+       this.storeShippingDetails();
+       
+
+       this.getPaytm(orderID,this.userId,this.totalPrice,this.email,this.mobile)
+     }
+     else if(this.payment == 'COD'){
+
+      firebase.firestore().collection('orders').doc(orderID).set({
         customerId: firebase.auth().currentUser.uid,
         name: this.Name,
         email: this.email,
@@ -143,15 +174,7 @@ export class CartComponent implements OnInit {
         processed: false
         }).then((data) => {
   
-          this.orderID = data.id;
-          this.dataSet.push(this.orderID);
-
-          
-
-          // this.getPaytm();
-          
-  
-          firebase.firestore().collection('users').doc(this.userId).collection('myOrders').doc(this.orderID).set({
+          firebase.firestore().collection('users').doc(this.userId).collection('myOrders').doc(orderID).set({
             name: this.Name,
             shippingAddress: this.address,
             mobile: this.mobile,
@@ -160,24 +183,16 @@ export class CartComponent implements OnInit {
             orderedOn: firebase.firestore.FieldValue.serverTimestamp(),
             orderItems: this.cart,
           });
-  
-          
 
-
-
-
-
-  
           window.alert('Order placed successfully!');
-          this.emptyCart();
+          
+          // this.emptyCart();
         });
 
-    });
+     }
 
+    })
     
-
-      
-      
   }
 
 }
