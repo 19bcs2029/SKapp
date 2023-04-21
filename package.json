@@ -33,7 +33,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase": "^7.15.1",
-    "firebase-admin": "^8.12.1",
+    "firebase-admin": "^11.7.0",
     "font-awesome": "^4.7.0",
     "fs": "0.0.1-security",
     "http.request": "^1.1.0",
